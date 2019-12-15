@@ -11,6 +11,12 @@ require_once __DIR__ . '/../src/Repository/Repository.php';
 require_once __DIR__ . '/../src/Repository/DestinationRepository.php';
 require_once __DIR__ . '/../src/Repository/QuoteRepository.php';
 require_once __DIR__ . '/../src/Repository/SiteRepository.php';
+require_once __DIR__ . '/../src/Renderer/RendererInterface.php';
+require_once __DIR__ . '/../src/Renderer/SummaryHtmlRenderer.php';
+require_once __DIR__ . '/../src/Renderer/SummaryTextRenderer.php';
+require_once __DIR__ . '/../src/Renderer/DestinationNameRenderer.php';
+require_once __DIR__ . '/../src/Renderer/DestinationLinkRenderer.php';
+require_once __DIR__ . '/../src/Renderer/UserFirstnameRenderer.php';
 require_once __DIR__ . '/../src/TemplateManager.php';
 
 class TemplateManagerTest extends PHPUnit_Framework_TestCase
@@ -64,6 +70,22 @@ www.evaneos.com
 ");
         $templateManager = new TemplateManager();
 
+        $templateManager
+            ->registerRenderer(
+            new SummaryHtmlRenderer(QuoteRepository::getInstance())
+            )
+            ->registerRenderer(
+                new SummaryTextRenderer(QuoteRepository::getInstance())
+            )
+            ->registerRenderer(new DestinationNameRenderer(DestinationRepository::getInstance()))
+            ->registerRenderer(new DestinationLinkRenderer(
+                SiteRepository::getInstance(),
+                DestinationRepository::getInstance(),
+                QuoteRepository::getInstance()
+            ))
+            ->registerRenderer(new UserFirstnameRenderer(ApplicationContext::getInstance()))
+        ;
+
         $message = $templateManager->getTemplateComputed(
             $template,
             [
@@ -115,6 +137,22 @@ L'équipe Evaneos.com
 www.evaneos.com
 ");
         $templateManager = new TemplateManager();
+
+        $templateManager
+            ->registerRenderer(
+                new SummaryHtmlRenderer(QuoteRepository::getInstance())
+            )
+            ->registerRenderer(
+                new SummaryTextRenderer(QuoteRepository::getInstance())
+            )
+            ->registerRenderer(new DestinationNameRenderer(DestinationRepository::getInstance()))
+            ->registerRenderer(new DestinationLinkRenderer(
+                SiteRepository::getInstance(),
+                DestinationRepository::getInstance(),
+                QuoteRepository::getInstance()
+            ))
+            ->registerRenderer(new UserFirstnameRenderer(ApplicationContext::getInstance()))
+        ;
 
         $message = $templateManager->getTemplateComputed(
             $template,
